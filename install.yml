@@ -29,7 +29,3 @@
    - name: Run a docker container on swarms
      script: docker service create --replicas 3 -p 80:80 --name serviceName nginx
 	 
-   - name: Update the re-write rules, copy the nginx config file
-     copy:
-       src: /home/foo/static_site.cfg
-       dest: /etc/nginx/sites-available/static_site.cfg
