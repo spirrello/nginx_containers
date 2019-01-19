@@ -1,0 +1,35 @@
+---
+- hosts: localhost
+  remote_user: root
+  tasks:
+   - name: "Installing Docker Prerequisites "
+     yum: name={{ item }} state=latest
+     with_items:
+        - yum-utils
+        - device-mapper-persistent-data
+        - lvm2
+
+   - name: "Configuring docker repo"
+     get_url:
+       url: https://download.docker.com/linux/centos/docker-ce.repo
+       dest: /etc/yum.repos.d/docker-ce.repo
+       mode: 0644
+
+   - name: " Installing Docker "
+     yum:
+       name: docker-ce
+       state: present
+
+   - name: " Starting Docker service"
+     service:
+       name: docker
+       state: started
+       enabled: yes
+	   
+   - name: Run a docker container on swarms
+     script: docker service create --replicas 3 -p 80:80 --name serviceName nginx
+	 
+   - name: Update the re-write rules, copy the nginx config file
+     copy:
+       src: /home/foo/static_site.cfg
+       dest: /etc/nginx/sites-available/static_site.cfg
