@@ -2,30 +2,30 @@
 - hosts: localhost
   remote_user: root
   tasks:
-   - name: "Installing Docker Prerequisites "
-     yum: name={{ item }} state=latest
-     with_items:
+  - name: "Installing Docker Prerequisites "
+    yum: name={{ item }} state=latest
+    with_items:
         - yum-utils
         - device-mapper-persistent-data
         - lvm2
 
-   - name: "Configuring docker repo"
-     get_url:
+  - name: "Configuring docker repo"
+    get_url:
        url: https://download.docker.com/linux/centos/docker-ce.repo
        dest: /etc/yum.repos.d/docker-ce.repo
        mode: 0644
 
-   - name: " Installing Docker "
-     yum:
+  - name: " Installing Docker "
+    yum:
        name: docker-ce
        state: present
 
-   - name: " Starting Docker service"
-     service:
+  - name: " Starting Docker service"
+    service:
        name: docker
        state: started
        enabled: yes
 	   
-   - name: Run a docker container on swarms
-     script: docker service create --replicas 3 -p 80:80 --name serviceName nginx
+  - name: Run a docker container on swarms
+    script: docker service create --replicas 3 -p 80:80 --name serviceName nginx
 	 
